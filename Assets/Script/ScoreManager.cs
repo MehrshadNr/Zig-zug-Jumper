@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
@@ -9,8 +10,8 @@ public class ScoreManager : MonoBehaviour
     public int highScore = 0;
 
     [Header("UI References")]
-    public Text scoreText;
-    public Text highScoreText;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI highScoreText;
 
     [Header("Score Effects")]
     public bool enableScoreAnimation = true;
@@ -93,7 +94,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = "Score: " + currentScore.ToString();
+            scoreText.text = currentScore.ToString();
         }
     }
 
