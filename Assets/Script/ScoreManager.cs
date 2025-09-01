@@ -25,23 +25,27 @@ public class ScoreManager : MonoBehaviour
 
     void Awake()
     {
-        // Singleton setup
-        if (Instance == null)
+        // اگر Instance موجود است و از این scene نیست، آن را destroy کن
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // حفظ high score از Instance قبلی
+            highScore = Instance.highScore;
+            Destroy(Instance.gameObject);
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+
+        Instance = this;
+
+        // برای restart بهتر است که DontDestroyOnLoad را کامنت کنیم
+        // DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
-        // بارگذاری High Score از PlayerPrefs
-        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        // بارگذاری High Score از PlayerPrefs (فقط اگر هنوز load نشده)
+        if (highScore == 0)
+        {
+            highScore = PlayerPrefs.GetInt("HighScore", 0);
+        }
 
         // ذخیره اندازه اصلی برای انیمیشن
         if (scoreText != null)
@@ -55,6 +59,8 @@ public class ScoreManager : MonoBehaviour
 
         // ریست امتیاز فعلی
         ResetScore();
+
+        Debug.Log("ScoreManager Start - High Score: " + highScore);
     }
 
     public void AddScore(int points)

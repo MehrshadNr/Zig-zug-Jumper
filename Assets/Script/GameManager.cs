@@ -19,17 +19,17 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        // Singleton setup
-        if (Instance == null)
+        // اگر Instance موجود است و از این scene نیست، آن را destroy کن
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            Destroy(Instance.gameObject);
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+
+        Instance = this;
+
+        // فقط برای GameManager اصلی DontDestroyOnLoad استفاده کن
+        // ولی برای restart بهتر است که این خط را کامنت کنیم
+        // DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
+
+        Debug.Log("GameManager Start - Game Active: " + isGameActive);
     }
 
     public void GameOver()
@@ -101,7 +103,10 @@ public class GameManager : MonoBehaviour
         // بازگرداندن زمان به حالت عادی
         Time.timeScale = 1f;
 
-        // ریست امتیاز
+        // پاک کردن Instance تا GameManager جدید بتواند جایگزین شود
+        Instance = null;
+
+        // ریست امتیاز قبل از reload
         if (ScoreManager.Instance != null)
         {
             ScoreManager.Instance.ResetScore();
